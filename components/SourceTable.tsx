@@ -8,25 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import { Source } from '@prisma/client';
-import { Link } from '@mui/material';
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9)
-];
+import { Button, Link as MuiLink } from '@mui/material';
+import Link from 'next/link';
 
 interface SourceTableProps {
   sources: Source[];
@@ -38,6 +21,7 @@ export default function SourceTable(props: SourceTableProps) {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
+            <TableCell align="right"></TableCell>
             <TableCell>ID</TableCell>
             <TableCell align="right">Source #</TableCell>
             <TableCell align="right">Publication title</TableCell>
@@ -52,6 +36,11 @@ export default function SourceTable(props: SourceTableProps) {
               key={source.sourceNumber}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
+              <TableCell align="right">
+                <Link href={`source/${source.sourceNumber}/`}>
+                  <Button>Analyse</Button>
+                </Link>
+              </TableCell>
               <TableCell component="th" scope="row">
                 {source.id}
               </TableCell>
@@ -59,9 +48,9 @@ export default function SourceTable(props: SourceTableProps) {
               <TableCell align="right">{source.sourceName}</TableCell>
               <TableCell align="right">{source.sourceType}</TableCell>
               <TableCell align="right">
-                <Link href={source.url} target="_blank" rel="noreferrer">
+                <MuiLink href={source.url} target="_blank" rel="noreferrer">
                   {source.url}
-                </Link>
+                </MuiLink>
               </TableCell>
               <TableCell align="right">{source.searchType}</TableCell>
             </TableRow>
