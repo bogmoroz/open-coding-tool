@@ -1,0 +1,71 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+
+model User {
+  id            String       @default(cuid()) @id
+  name          String?
+  email         String?   @unique
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@map(name: "users")
+}
+
+enum SearchType {
+  GoogleSearch
+  Manual
+  Snowballing
+}
+
+// Define the Sources model
+model Source {
+  id           Int      @id @default(autoincrement())
+  sourceNumber Int?      @unique
+  sourceName   String
+  sourceType   String
+  sourceContent String
+  searchType   SearchType
+  codings      Coding[]
+  memos        Memo[]
+  url          String @default("")
+}
+
+// Define the Codes model with a self-referencing relationship
+model Code {
+  id             Int      @id @default(autoincrement())
+  codeName       String
+  codeDescription String?
+  parentId       Int?
+  codings        Coding[]
+  parent         Code?    @relation("ChildToParent", fields: [parentId], references: [id])
+  children       Code[]   @relation("ChildToParent")
+}
+
+// Define the Coding model to represent the relationship between sources and codes
+model Coding {
+  id          Int    @id @default(autoincrement())
+  sourceId    Int
+  codeId      Int
+  startIndex    Int?
+  endIndex      Int?
+  codedSnippet  String? // Add a field for the sample string
+  source      Source @relation(fields: [sourceId], references: [id])
+  code        Code   @relation(fields: [codeId], references: [id])
+}
+
+// Define the Memo model to store researcher notes
+model Memo {
+  id         Int      @id @default(autoincrement())
+  sourceId   Int
+  memoText   String
+  source     Source   @relation(fields: [sourceId], references: [id])
+}
