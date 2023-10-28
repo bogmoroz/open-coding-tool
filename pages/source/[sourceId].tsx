@@ -4,15 +4,18 @@ import ReactMarkdown from 'react-markdown';
 import Layout from '../../components/Layout';
 import prisma from '../../lib/prisma';
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
   CardContent,
   Chip,
   Link as MuiLink,
+  Select,
+  TextField,
   Typography
 } from '@mui/material';
-import { Source, Coding } from '../../types';
+import { Source, Coding, Code } from '../../types';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const source = await prisma.source.findUnique({
@@ -28,23 +31,28 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     }
   });
 
+  console.log('get codes');
+  const codes = await prisma.code.findMany();
+
+  console.log(codes);
+
   return {
-    props: { source }
+    props: { source, availableCodes: codes }
   };
 };
 
 interface SourceProps {
   source: Source;
+  availableCodes: Code[];
 }
 
 const Source: React.FC<SourceProps> = (props) => {
-  const { source } = props;
+  const { source, availableCodes } = props;
 
   const [newCoding, setNewCoding] = React.useState<Coding | undefined>(
     undefined
   );
 
-  console.log(source);
   return (
     <Layout>
       <div>
@@ -59,7 +67,22 @@ const Source: React.FC<SourceProps> = (props) => {
 
         <h2>Codings for this Source:</h2>
         {newCoding ? (
-          <Typography>Coding editor</Typography>
+          <Card sx={{ maxWidth: 400 }}>
+            <CardContent>
+              <Autocomplete
+                options={availableCodes?.map((code) => code.codeName) || []}
+                renderInput={(params) => <TextField {...params} label="Code" />}
+              ></Autocomplete>
+              <Typography variant="body2">{newCoding.codedSnippet}</Typography>
+            </CardContent>
+
+            <CardActions>
+              <Button size="small">Save</Button>
+              <Button size="small" onClick={() => setNewCoding(undefined)}>
+                Cancel
+              </Button>
+            </CardActions>
+          </Card>
         ) : (
           <Button
             onClick={() => {
@@ -97,7 +120,7 @@ const Source: React.FC<SourceProps> = (props) => {
               </CardContent>
 
               <CardActions>
-                <Button size="small">Go to code</Button>
+                <Button size="small">Edit coding</Button>
                 <Button size="small">Remove coding</Button>
               </CardActions>
             </Card>
