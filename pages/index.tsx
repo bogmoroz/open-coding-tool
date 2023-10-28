@@ -1,30 +1,39 @@
-import React from "react"
-import { GetStaticProps } from "next"
-import Layout from "../components/Layout"
-import Post, { PostProps } from "../components/Post"
+import React from 'react';
+import { GetStaticProps } from 'next';
+import Layout from '../components/Layout';
+import Post, { PostProps } from '../components/Post';
+import prisma from '../lib/prisma';
+import { Table } from '@mui/material';
+import BasicTable from '../components/BasicTable';
+import SourceTable from '../components/SourceTable';
+import { Source } from '@prisma/client';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const feed = [
-    {
-      id: "1",
-      title: "Prisma is the perfect ORM for Next.js",
-      content: "[Prisma](https://github.com/prisma/prisma) and Next.js go _great_ together!",
-      published: false,
-      author: {
-        name: "Nikolas Burk",
-        email: "burk@prisma.io",
-      },
-    },
-  ]
-  return { 
-    props: { feed }, 
-    revalidate: 10 
-  }
-}
+  // const feed = await prisma.source.findMany({
+  //   // include: {
+  //   //   codings: {
+  //   //     select: { name: true }
+  //   //   }
+  //   // }
+  // });
+  // return {
+  //   props: { feed },
+  //   revalidate: 10
+  // };
+
+  const sources = await prisma.source.findMany();
+
+  console.log(sources);
+
+  return {
+    props: { sources },
+    revalidate: 10
+  };
+};
 
 type Props = {
-  feed: PostProps[]
-}
+  sources: Source[];
+};
 
 const Blog: React.FC<Props> = (props) => {
   return (
@@ -32,11 +41,13 @@ const Blog: React.FC<Props> = (props) => {
       <div className="page">
         <h1>Public Feed</h1>
         <main>
-          {props.feed.map((post) => (
+          <SourceTable sources={props.sources} />
+
+          {/* {props.feed.map((post) => (
             <div key={post.id} className="post">
               <Post post={post} />
             </div>
-          ))}
+          ))} */}
         </main>
       </div>
       <style jsx>{`
@@ -54,7 +65,7 @@ const Blog: React.FC<Props> = (props) => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
