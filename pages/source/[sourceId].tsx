@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { GetServerSideProps } from 'next';
 import ReactMarkdown from 'react-markdown';
 import Layout from '../../components/Layout';
@@ -10,12 +10,17 @@ import {
   CardActions,
   CardContent,
   Chip,
+  Input,
   Link as MuiLink,
   Select,
   TextField,
-  Typography
+  TextareaAutosize,
+  Typography,
+  createFilterOptions
 } from '@mui/material';
 import { Source, Coding, Code } from '../../types';
+import 'react-quill/dist/quill.snow.css';
+import dynamic from 'next/dynamic';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const source = await prisma.source.findUnique({
@@ -46,8 +51,15 @@ interface SourceProps {
   availableCodes: Code[];
 }
 
+async function createNewCode(req, res) {}
+
 const Source: React.FC<SourceProps> = (props) => {
   const { source, availableCodes } = props;
+
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
 
   const [newCoding, setNewCoding] = React.useState<Coding | undefined>(
     undefined
@@ -67,13 +79,49 @@ const Source: React.FC<SourceProps> = (props) => {
 
         <h2>Codings for this Source:</h2>
         {newCoding ? (
-          <Card sx={{ maxWidth: 400 }}>
+          <Card
+            sx={{
+              maxWidth: 400
+            }}
+          >
             <CardContent>
+              {/* Autocomplete for a code */}
               <Autocomplete
-                options={availableCodes?.map((code) => code.codeName) || []}
-                renderInput={(params) => <TextField {...params} label="Code" />}
-              ></Autocomplete>
-              <Typography variant="body2">{newCoding.codedSnippet}</Typography>
+                sx={{ marginBottom: '10px' }}
+                freeSolo
+                options={availableCodes.map((code) => code.codeName) || []}
+                value={newCoding.code.codeName}
+                onChange={(event, newValue) => {
+                  setNewCoding((prevCoding) => ({
+                    ...prevCoding,
+                    code: { ...prevCoding.code, codeName: newValue }
+                  }));
+                }}
+                renderInput={(params) => <TextField label="Code" {...params} />}
+              />
+
+              {/* Text editor for the coded snippet */}
+              <ReactQuill
+                placeholder="Enter the snippet that you are associating with the selected code"
+                theme="snow"
+                value={newCoding.codedSnippet}
+                modules={{
+                  toolbar: [
+                    [{ header: '1' }, { header: '2' }],
+                    ['bold', 'underline'], // Display only Bold and Underline
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['clean']
+                  ]
+                }}
+                onChange={(value) =>
+                  setNewCoding((prevCoding) => ({
+                    ...prevCoding,
+                    code: { ...prevCoding.code },
+                    source: { ...prevCoding.source },
+                    codedSnippet: value
+                  }))
+                }
+              />
             </CardContent>
 
             <CardActions>
