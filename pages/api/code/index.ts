@@ -8,14 +8,14 @@ import { authOptions } from '../auth/[...nextauth]';
 export default async function handle(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) {
-    res.status(401).end();
-    return;
-  }
-
   if (req.method === 'GET') {
     handleGet(req, res);
   } else if (req.method === 'POST') {
+    if (!session) {
+      res.status(401).end();
+      return;
+    }
+
     handlePost(req, res);
   } else {
     res.status(405).end(); // Method not allowed
