@@ -244,7 +244,7 @@ const Source: React.FC<SourceProps> = (props) => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr',
+            gridTemplateColumns: 'repeat( auto-fit, minmax(250px, 1fr) )',
             columnGap: '10px',
             rowGap: '10px'
           }}
