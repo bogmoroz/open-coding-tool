@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { GetStaticProps } from 'next';
 
 import prisma from '../../lib/prisma';
@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import SortableTree from '@nosferatu500/react-sortable-tree';
 
-export const dynamic = 'force-dynamic';
+import dynamic from 'next/dynamic';
 
 export const getStaticProps: GetStaticProps = async () => {
   const codes = await prisma.code.findMany({
@@ -35,6 +35,11 @@ type Props = {
 
 const CodesPage: React.FC<Props> = (props) => {
   const router = useRouter();
+
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
 
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
 
