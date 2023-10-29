@@ -6,16 +6,9 @@ import { authOptions } from '../auth/[...nextauth]';
 
 // GET /api/code
 export default async function handle(req, res) {
-  const session = await getServerSession(req, res, authOptions);
-
   if (req.method === 'GET') {
     handleGet(req, res);
   } else if (req.method === 'POST') {
-    if (!session) {
-      res.status(401).end();
-      return;
-    }
-
     handlePost(req, res);
   } else {
     res.status(405).end(); // Method not allowed
@@ -35,6 +28,12 @@ async function handleGet(req, res) {
 
 // POST /api/code
 async function handlePost(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    res.status(401).end();
+    return;
+  }
+
   const newCode: Code = req.body;
 
   const result = await prisma.code.create({
