@@ -31,7 +31,7 @@ type Props = {
   codes: Code[];
 };
 
-const Blog: React.FC<Props> = (props) => {
+const CodesPage: React.FC<Props> = (props) => {
   const SortableTree = useMemo(
     () =>
       dynamic(() => import('@nosferatu500/react-sortable-tree'), {
@@ -156,4 +156,4 @@ const Blog: React.FC<Props> = (props) => {
   );
 };
 
-export default Blog;
+export default CodesPage;

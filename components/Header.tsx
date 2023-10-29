@@ -12,12 +12,12 @@ const Header: React.FC = () => {
 
   let left = (
     <div className="left">
-      <Link href="/">
+      <Link href="/" legacyBehavior>
         <a className="bold" data-active={isActive('/')}>
           Sources
         </a>
       </Link>
-      <Link href="/codes">
+      <Link href="/codes" legacyBehavior>
         <a className="bold" data-active={isActive('/codes')}>
           Codes
         </a>
@@ -50,12 +50,12 @@ const Header: React.FC = () => {
   if (status === 'loading') {
     left = (
       <div className="left">
-        <Link href="/">
+        <Link href="/" legacyBehavior>
           <a className="bold" data-active={isActive('/')}>
             Sources
           </a>
         </Link>
-        <Link href="/codes">
+        <Link href="/codes" legacyBehavior>
           <a className="bold" data-active={isActive('/codes')}>
             Codes
           </a>
@@ -96,7 +96,7 @@ const Header: React.FC = () => {
   if (!session) {
     right = (
       <div className="right">
-        <Link href="/api/auth/signin">
+        <Link href="/api/auth/signin" legacyBehavior>
           <a data-active={isActive('/signup')}>Log in</a>
         </Link>
         <style jsx>{`
@@ -127,12 +127,12 @@ const Header: React.FC = () => {
   if (session) {
     left = (
       <div className="left">
-        <Link href="/">
+        <Link href="/" legacyBehavior>
           <a className="bold" data-active={isActive('/')}>
             Sources
           </a>
         </Link>
-        <Link href="/codes">
+        <Link href="/codes" legacyBehavior>
           <a className="bold" data-active={isActive('/codes')}>
             Codes
           </a>

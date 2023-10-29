@@ -37,7 +37,7 @@ export default function SourceTable(props: SourceTableProps) {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell align="right">
-                <Link href={`source/${source.sourceNumber}/`}>
+                <Link href={`source/${source.sourceNumber}/`} legacyBehavior>
                   <Button>Analyse</Button>
                 </Link>
               </TableCell>

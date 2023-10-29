@@ -1,10 +1,14 @@
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prisma';
 import { Code } from '../../../types';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/[...nextauth]';
 
 // PUT /api/update-code-parents
 export default async function handle(req, res) {
-  const session = await getSession({ req });
+  const session = await getServerSession(req, res, authOptions);
+
+  console.log(session);
 
   if (!session) {
     res.status(401).end();
