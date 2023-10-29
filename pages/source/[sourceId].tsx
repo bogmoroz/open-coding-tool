@@ -138,7 +138,13 @@ const Source: React.FC<SourceProps> = (props) => {
                 id: undefined,
                 startIndex: undefined,
                 endIndex: undefined,
-                code: undefined,
+                code: {
+                  codeName: '',
+                  codeDescription: '',
+                  codings: undefined,
+                  id: undefined,
+                  parentId: undefined
+                },
                 codeId: undefined,
                 source: source,
                 sourceId: source.id,
