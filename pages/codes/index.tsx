@@ -1,36 +1,35 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
-import Layout from '../components/Layout';
-import Post, { PostProps } from '../components/Post';
-import prisma from '../lib/prisma';
-import { Table } from '@mui/material';
-import BasicTable from '../components/BasicTable';
-import SourceTable from '../components/SourceTable';
-import { Source } from '@prisma/client';
+
+import prisma from '../../lib/prisma';
+import Layout from '../../components/Layout';
+import { Code } from '../../types';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const sources = await prisma.source.findMany();
+  const codes = await prisma.code.findMany({
+    include: {
+      codings: true
+    }
+  });
 
-  console.log(sources);
+  console.log(codes);
 
   return {
-    props: { sources },
+    props: { codes },
     revalidate: 10
   };
 };
 
 type Props = {
-  sources: Source[];
+  codes: Code[];
 };
 
 const Blog: React.FC<Props> = (props) => {
   return (
     <Layout>
       <div className="page">
-        <h1>Sources</h1>
-        <main>
-          <SourceTable sources={props.sources} />
-        </main>
+        <h1>Codes</h1>
+        <main></main>
       </div>
       <style jsx>{`
         .post {

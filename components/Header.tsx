@@ -14,7 +14,7 @@ const Header: React.FC = () => {
     <div className="left">
       <Link href="/">
         <a className="bold" data-active={isActive('/')}>
-          Feed
+          Sources
         </a>
       </Link>
       <Link href="/codes">
@@ -23,11 +23,6 @@ const Header: React.FC = () => {
         </a>
       </Link>
 
-      <Link href="/codings">
-        <a className="bold" data-active={isActive('/codings')}>
-          Codings
-        </a>
-      </Link>
       <style jsx>{`
         .bold {
           font-weight: bold;
@@ -57,7 +52,12 @@ const Header: React.FC = () => {
       <div className="left">
         <Link href="/">
           <a className="bold" data-active={isActive('/')}>
-            Feed
+            Sources
+          </a>
+        </Link>
+        <Link href="/codes">
+          <a className="bold" data-active={isActive('/codes')}>
+            Codes
           </a>
         </Link>
         <style jsx>{`
@@ -129,11 +129,13 @@ const Header: React.FC = () => {
       <div className="left">
         <Link href="/">
           <a className="bold" data-active={isActive('/')}>
-            Feed
+            Sources
           </a>
         </Link>
-        <Link href="/drafts">
-          <a data-active={isActive('/drafts')}>My drafts</a>
+        <Link href="/codes">
+          <a className="bold" data-active={isActive('/codes')}>
+            Codes
+          </a>
         </Link>
         <style jsx>{`
           .bold {
@@ -161,11 +163,6 @@ const Header: React.FC = () => {
         <p>
           {session.user.name} ({session.user.email})
         </p>
-        <Link href="/create">
-          <button>
-            <a>New post</a>
-          </button>
-        </Link>
         <button onClick={() => signOut()}>
           <a>Log out</a>
         </button>
