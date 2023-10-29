@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
 
 import prisma from '../../lib/prisma';
@@ -14,38 +14,67 @@ import SortableTree from '@nosferatu500/react-sortable-tree';
 
 export const dynamic = 'force-dynamic';
 
-export const getStaticProps: GetStaticProps = async () => {
-  const codes = await prisma.code.findMany({
-    include: {
-      codings: true
-    }
-  });
+// export const getStaticProps: GetStaticProps = async () => {
+//   const codes = await prisma.code.findMany({
+//     include: {
+//       codings: true
+//     }
+//   });
 
-  console.log(codes);
+//   console.log(codes);
 
-  return {
-    props: { codes },
-    revalidate: 1
-  };
-};
+//   return {
+//     props: { codes },
+//     revalidate: 1
+//   };
+// };
 
-type Props = {
-  codes: Code[];
-};
+// type Props = {
+//   codes: Code[];
+// };
 
-const CodesPage: React.FC<Props> = (props) => {
+const CodesPage: React.FC = () => {
   const router = useRouter();
+
+  const [codes, setCodes] = React.useState<Code[]>([]);
 
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
 
-  const [treeData, setTreeData] = useState(() => buildTree(props.codes));
+  const [treeData, setTreeData] = useState(() => buildTree(codes));
 
-  const codeDictionary: Record<number, Code> = {}; // A dictionary to efficiently look up code objects by ID
+  const [codeDictionary, setCodeDictionary] = React.useState<
+    Record<number, Code>
+  >({}); // A dictionary to efficiently look up code objects by ID
 
-  // Populate the codeDictionary with code objects
-  props.codes.forEach((code) => {
-    codeDictionary[code.id] = code;
-  });
+  const fetchCodes = async () => {
+    try {
+      const response = await fetch('/api/code', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const responseBody = await response.json();
+
+      setCodes(responseBody);
+    } catch (error) {
+      console.error('Failed to save changes');
+    }
+  };
+
+  useEffect(() => {
+    console.log('Fetch codes');
+
+    fetchCodes();
+  }, []);
+
+  useEffect(() => {
+    // Populate the codeDictionary with code objects
+    codes.forEach((code) => {
+      codeDictionary[code.id] = code;
+    });
+
+    setTreeData(buildTree(codes));
+  }, [codes]);
 
   // Convert flat list of codes to hierarchical tree structure
   function buildTree(data: Code[], parentId: number | null = null) {
@@ -102,9 +131,10 @@ const CodesPage: React.FC<Props> = (props) => {
 
       const responseBody = await response.json();
 
+      setUnsavedChanges(false);
       console.log(responseBody);
 
-      router.reload();
+      fetchCodes();
     } catch (error) {
       console.error('Failed to save changes');
     }

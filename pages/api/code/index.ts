@@ -24,7 +24,12 @@ export default async function handle(req, res) {
 
 // GET /api/code
 async function handleGet(req, res) {
-  const result = await prisma.code.findMany();
+  const result = await prisma.code.findMany({
+    include: {
+      codings: true
+    }
+  });
+
   res.json(result);
 }
 
