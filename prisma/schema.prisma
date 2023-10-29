@@ -18,15 +18,18 @@ enum SearchType {
 
 // Define the Sources model
 model Source {
-  id            Int        @id @default(autoincrement())
-  sourceNumber  Int?       @unique
-  sourceName    String
-  sourceType    String
-  sourceContent String
-  searchType    SearchType
-  codings       Coding[]
-  memos         Memo[]
-  url           String     @default("")
+  id               Int        @id @default(autoincrement())
+  sourceNumber     Int?       @unique
+  sourceName       String
+  publicationTitle String     @default("")
+  author           String     @default("")
+  year             String     @default("")
+  sourceType       String
+  sourceContent    String
+  searchType       SearchType
+  codings          Coding[]
+  memos            Memo[]
+  url              String     @default("")
 }
 
 // Define the Codes model with a self-referencing relationship
