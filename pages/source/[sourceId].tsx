@@ -9,21 +9,15 @@ import {
   Card,
   CardActions,
   CardContent,
-  Chip,
-  Grid,
-  Grow,
-  Input,
   Link as MuiLink,
-  Select,
   TextField,
-  TextareaAutosize,
-  Typography,
-  createFilterOptions
+  Typography
 } from '@mui/material';
 import { Source, Coding, Code } from '../../types';
 import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import CodingCard from '../../components/CodingCard';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const source = await prisma.source.findUnique({
@@ -256,34 +250,7 @@ const Source: React.FC<SourceProps> = (props) => {
           }}
         >
           {source.codings.map((coding) => (
-            <Card key={coding.id} sx={{ maxWidth: 400 }}>
-              <CardContent>
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Code name
-                </Typography>
-                <Typography variant="h5" component="div">
-                  {coding.code.codeName}
-                </Typography>
-                <ReactQuill
-                  readOnly
-                  placeholder="No snippet provided"
-                  theme="snow"
-                  value={coding.codedSnippet}
-                  modules={{
-                    toolbar: false
-                  }}
-                />
-              </CardContent>
-
-              <CardActions>
-                <Button size="small">Edit coding</Button>
-                <Button size="small">Remove coding</Button>
-              </CardActions>
-            </Card>
+            <CodingCard coding={coding} />
           ))}
         </div>
       </div>
