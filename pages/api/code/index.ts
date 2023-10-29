@@ -22,7 +22,7 @@ export default async function handle(req, res) {
 
 // GET /api/code
 async function handleGet(req, res) {
-  const result = await await prisma.code.findMany();
+  const result = await prisma.code.findMany();
   res.json(result);
 }
 
