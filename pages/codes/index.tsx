@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 
 import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
+import SortableTree from '@nosferatu500/react-sortable-tree';
 
 export const getStaticProps: GetStaticProps = async () => {
   const codes = await prisma.code.findMany({
@@ -32,14 +33,6 @@ type Props = {
 };
 
 const CodesPage: React.FC<Props> = (props) => {
-  const SortableTree = useMemo(
-    () =>
-      dynamic(() => import('@nosferatu500/react-sortable-tree'), {
-        ssr: true
-      }),
-    []
-  );
-
   const router = useRouter();
 
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
@@ -70,32 +63,21 @@ const CodesPage: React.FC<Props> = (props) => {
   }
 
   // Flatten the hierarchical tree structure back into a flat list of codes
-  function flattenTree(treeData: any[]): Code[] {
-    const flatList: Code[] = [];
-
+  function flattenTree(treeData: any[], parentId?: number) {
     treeData.forEach((node) => {
       const code = codeDictionary[node.id];
 
-      if (node.children) {
-        node.children.forEach((childNode) => {
-          const childCode = codeDictionary[childNode.id];
-          if (!code.children) {
-            code.children = [];
-          }
-          code.children.push(childCode);
-        });
+      code.parentId = parentId || null;
+
+      console.log(
+        'new parent id for code: ' + code.codeName + ' is ' + code.parentId
+      );
+
+      if (node.children && node.children.length > 0) {
+        // Recursively call flattenTree to set the parent ID for children
+        flattenTree(node.children, node.id);
       }
-
-      //   if (code) {
-      //     code.parentId = node.parentId || null;
-      //     code.children = node.children
-      //       ? node.children.map((childNode) => childNode.id)
-      //       : [];
-      //   }
-      flatList.push(code);
     });
-
-    return flatList;
   }
 
   // Handle changes in the tree structure
@@ -106,7 +88,9 @@ const CodesPage: React.FC<Props> = (props) => {
 
   const handleSave = async () => {
     // Flatten the tree structure back into a flat list
-    const updatedCodes = flattenTree(treeData);
+    flattenTree(treeData);
+
+    const updatedCodes = Object.values(codeDictionary);
 
     try {
       const response = await fetch('/api/update-code-parents', {
