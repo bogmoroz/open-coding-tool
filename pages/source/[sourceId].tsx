@@ -10,6 +10,8 @@ import {
   CardActions,
   CardContent,
   Chip,
+  Grid,
+  Grow,
   Input,
   Link as MuiLink,
   Select,
@@ -21,6 +23,7 @@ import {
 import { Source, Coding, Code } from '../../types';
 import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const source = await prisma.source.findUnique({
@@ -36,34 +39,118 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     }
   });
 
-  console.log('get codes');
   const codes = await prisma.code.findMany();
 
-  console.log(codes);
-
   return {
-    props: { source, availableCodes: codes }
+    props: { source, initialAvailableCodes: codes }
   };
 };
 
 interface SourceProps {
   source: Source;
-  availableCodes: Code[];
+  initialAvailableCodes: Code[];
 }
 
-async function createNewCode(req, res) {}
-
 const Source: React.FC<SourceProps> = (props) => {
-  const { source, availableCodes } = props;
+  const { source } = props;
 
   const ReactQuill = useMemo(
     () => dynamic(() => import('react-quill'), { ssr: false }),
     []
   );
 
+  const [availableCodes, setAvailableCodes] = React.useState<Code[]>(
+    props.initialAvailableCodes
+  );
+
+  const [selectedCode, setSelectedCode] = React.useState<Code | undefined>(
+    undefined
+  );
+  const [codeInputValue, setCodeInputValue] = React.useState('');
+
   const [newCoding, setNewCoding] = React.useState<Coding | undefined>(
     undefined
   );
+
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const fetchCodes = async () => {
+      const response = await fetch('/api/code', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const responseBody = await response.json();
+
+      setAvailableCodes(responseBody as Code[]);
+    };
+
+    fetchCodes();
+  }, [selectedCode]);
+
+  const handleAutocompleteChange = (submittedCodeName) => {
+    const selectedExistingCode = availableCodes.find(
+      (code) => code.codeName === submittedCodeName
+    );
+
+    if (selectedExistingCode) {
+      setSelectedCode(selectedExistingCode);
+    } else {
+      createCode(submittedCodeName);
+    }
+  };
+
+  const handleInputChange = (event, newInputValue) => {
+    setCodeInputValue(newInputValue);
+  };
+
+  const handleInputKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      // The user pressed Enter, handle the selection or creation here
+      handleAutocompleteChange(codeInputValue);
+    }
+  };
+
+  const createCode = async (newCodeName: string) => {
+    try {
+      const response = await fetch('/api/code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          codeName: newCodeName
+        })
+      });
+
+      const responseBody = await response.json();
+
+      console.log(responseBody);
+
+      setSelectedCode(responseBody as Code);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createCoding = async () => {
+    try {
+      const response = await fetch('/api/coding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newCoding,
+          codeId: selectedCode.id,
+          sourceId: props.source.id
+        })
+      });
+
+      const responseJson = await response.json();
+      console.log(responseJson);
+      router.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Layout>
@@ -90,13 +177,10 @@ const Source: React.FC<SourceProps> = (props) => {
                 sx={{ marginBottom: '10px' }}
                 freeSolo
                 options={availableCodes.map((code) => code.codeName) || []}
-                value={newCoding.code.codeName}
-                onChange={(event, newValue) => {
-                  setNewCoding((prevCoding) => ({
-                    ...prevCoding,
-                    code: { ...prevCoding.code, codeName: newValue }
-                  }));
-                }}
+                value={selectedCode?.codeName}
+                inputValue={codeInputValue}
+                onInputChange={handleInputChange}
+                onKeyDown={handleInputKeyDown}
                 renderInput={(params) => <TextField label="Code" {...params} />}
               />
 
@@ -116,8 +200,6 @@ const Source: React.FC<SourceProps> = (props) => {
                 onChange={(value) =>
                   setNewCoding((prevCoding) => ({
                     ...prevCoding,
-                    code: { ...prevCoding.code },
-                    source: { ...prevCoding.source },
                     codedSnippet: value
                   }))
                 }
@@ -125,7 +207,16 @@ const Source: React.FC<SourceProps> = (props) => {
             </CardContent>
 
             <CardActions>
-              <Button size="small">Save</Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  if (newCoding && selectedCode.id) {
+                    createCoding();
+                  }
+                }}
+              >
+                Save
+              </Button>
               <Button size="small" onClick={() => setNewCoding(undefined)}>
                 Cancel
               </Button>
@@ -156,7 +247,14 @@ const Source: React.FC<SourceProps> = (props) => {
           </Button>
         )}
 
-        <ul>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            columnGap: '10px',
+            rowGap: '10px'
+          }}
+        >
           {source.codings.map((coding) => (
             <Card key={coding.id} sx={{ maxWidth: 400 }}>
               <CardContent>
@@ -170,7 +268,15 @@ const Source: React.FC<SourceProps> = (props) => {
                 <Typography variant="h5" component="div">
                   {coding.code.codeName}
                 </Typography>
-                <Typography variant="body2">{coding.codedSnippet}</Typography>
+                <ReactQuill
+                  readOnly
+                  placeholder="No snippet provided"
+                  theme="snow"
+                  value={coding.codedSnippet}
+                  modules={{
+                    toolbar: false
+                  }}
+                />
               </CardContent>
 
               <CardActions>
@@ -179,7 +285,7 @@ const Source: React.FC<SourceProps> = (props) => {
               </CardActions>
             </Card>
           ))}
-        </ul>
+        </div>
       </div>
     </Layout>
   );
