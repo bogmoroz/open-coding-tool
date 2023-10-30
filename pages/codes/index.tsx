@@ -80,9 +80,9 @@ const CodesPage: React.FC = () => {
 
       code.parentId = parentId || null;
 
-      console.log(
-        'new parent id for code: ' + code.codeName + ' is ' + code.parentId
-      );
+      // console.log(
+      //   'new parent id for code: ' + code.codeName + ' is ' + code.parentId
+      // );
 
       if (node.children && node.children.length > 0) {
         // Recursively call flattenTree to set the parent ID for children

@@ -138,8 +138,7 @@ const Source: React.FC<SourceProps> = (props) => {
         })
       });
 
-      const responseJson = await response.json();
-      console.log(responseJson);
+      // const responseJson = await response.json();
       router.reload();
     } catch (error) {
       console.error(error);
@@ -149,14 +148,19 @@ const Source: React.FC<SourceProps> = (props) => {
   return (
     <Layout>
       <div>
-        <h1>Source Details</h1>
-        <h2>Source Name: {source.sourceName}</h2>
-        <p>Source Type: {source.sourceType}</p>
-        <p>Search Type: {source.searchType}</p>
+        <Typography variant="h4">{`${source.sourceNumber}:  ${source.publicationTitle}`}</Typography>
+        <Typography variant="subtitle1">
+          Source name: {source.sourceName}
+        </Typography>
 
-        <MuiLink href={source.url} target="_blank" rel="noreferrer">
-          {source.url}
-        </MuiLink>
+        {/* <p>Search Type: {source.searchType}</p> */}
+
+        <Typography>
+          URL:{' '}
+          <MuiLink href={source.url} target="_blank" rel="noreferrer">
+            {source.url}
+          </MuiLink>
+        </Typography>
 
         <h2>Codings for this Source:</h2>
         {newCoding ? (
