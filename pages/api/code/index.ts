@@ -4,7 +4,6 @@ import { Code } from '../../../types';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
 
-// GET /api/code
 export default async function handle(req, res) {
   if (req.method === 'GET') {
     handleGet(req, res);

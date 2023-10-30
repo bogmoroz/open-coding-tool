@@ -250,7 +250,13 @@ const Source: React.FC<SourceProps> = (props) => {
           }}
         >
           {source.codings.map((coding) => (
-            <CodingCard coding={coding} />
+            <CodingCard
+              coding={coding}
+              key={coding.codeId}
+              onCodingEdited={() => {
+                router.reload();
+              }}
+            />
           ))}
         </div>
       </div>
