@@ -8,7 +8,11 @@ import SourceTable from '../components/SourceTable';
 import { Source } from '@prisma/client';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const sources = await prisma.source.findMany();
+  const sources = await prisma.source.findMany({
+    orderBy: {
+      sourceNumber: 'asc'
+    }
+  });
 
   console.log(sources);
 

@@ -22,7 +22,7 @@ export default function SourceTable(props: SourceTableProps) {
         <TableHead>
           <TableRow>
             <TableCell align="right"></TableCell>
-            <TableCell>ID</TableCell>
+            {/* <TableCell>ID</TableCell> */}
             <TableCell align="right">Source #</TableCell>
             <TableCell align="right">Publication title</TableCell>
             <TableCell align="right">Source Type</TableCell>
@@ -41,9 +41,9 @@ export default function SourceTable(props: SourceTableProps) {
                   <Button>Analyse</Button>
                 </Link>
               </TableCell>
-              <TableCell component="th" scope="row">
+              {/* <TableCell component="th" scope="row">
                 {source.id}
-              </TableCell>
+              </TableCell> */}
               <TableCell align="right">{source.sourceNumber}</TableCell>
               <TableCell align="right">{source.sourceName}</TableCell>
               <TableCell align="right">{source.sourceType}</TableCell>

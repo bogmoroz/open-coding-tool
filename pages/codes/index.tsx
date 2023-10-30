@@ -124,9 +124,15 @@ const CodesPage: React.FC = () => {
   return (
     <Layout>
       <div className="page">
-        <h1>Codes</h1>
-        <main style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-          <div style={{ height: '100vh' }}>
+        {/* <h1>Codes</h1> */}
+        <main
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            height: '100vh'
+          }}
+        >
+          <div style={{ height: '100%' }}>
             <Button onClick={handleSave} disabled={!unsavedChanges}>
               Save
             </Button>
