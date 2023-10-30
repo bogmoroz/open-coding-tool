@@ -24,8 +24,8 @@ export default function SourceTable(props: SourceTableProps) {
             <TableCell align="right"></TableCell>
             {/* <TableCell>ID</TableCell> */}
             <TableCell align="right">Source #</TableCell>
-            <TableCell align="right">Publication title</TableCell>
-            <TableCell align="right">Source Type</TableCell>
+            <TableCell align="right">Source name</TableCell>
+            <TableCell align="right">Publication Title</TableCell>
             <TableCell align="right">URL</TableCell>
             <TableCell align="right">Search Type</TableCell>
           </TableRow>
@@ -46,7 +46,7 @@ export default function SourceTable(props: SourceTableProps) {
               </TableCell> */}
               <TableCell align="right">{source.sourceNumber}</TableCell>
               <TableCell align="right">{source.sourceName}</TableCell>
-              <TableCell align="right">{source.sourceType}</TableCell>
+              <TableCell align="right">{source.publicationTitle}</TableCell>
               <TableCell align="right">
                 <MuiLink href={source.url} target="_blank" rel="noreferrer">
                   {source.url}
