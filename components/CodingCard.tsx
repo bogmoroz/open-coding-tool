@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 interface CodingCardProps {
+  showSourceNumber?: boolean;
   coding: Coding;
   onCodingEdited: () => void;
 }
@@ -68,6 +69,11 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
       sx={{ maxWidth: 400, display: 'flex', flexDirection: 'column' }}
     >
       <CardContent>
+        {props.showSourceNumber && (
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+            {coding.sourceId}
+          </Typography>
+        )}
         {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Code name
         </Typography> */}

@@ -160,9 +160,13 @@ const CodesPage: React.FC = () => {
                   coding={{
                     ...coding,
                     codedSnippet: coding.codedSnippet,
-                    code: { ...selectedCode }
+                    code: { ...selectedCode },
+                    source: {
+                      ...coding.source
+                    }
                   }}
                   onCodingEdited={() => {}}
+                  showSourceNumber={true}
                 />
               ))}
             </div>
