@@ -63,11 +63,14 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
   }, [props.coding]);
 
   return (
-    <Card key={coding.id} sx={{ maxWidth: 400 }}>
+    <Card
+      key={coding.id}
+      sx={{ maxWidth: 400, display: 'flex', flexDirection: 'column' }}
+    >
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Code name
-        </Typography>
+        </Typography> */}
         <Typography variant="h5" component="div">
           {coding.code?.codeName}
         </Typography>
@@ -82,7 +85,7 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
         />
       </CardContent>
 
-      <CardActions>
+      <CardActions sx={{ marginTop: 'auto' }}>
         {!editing && (
           <Button size="small" onClick={() => setEditing(true)}>
             Edit coding
@@ -106,7 +109,9 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
           </>
         )}
 
-        <Button size="small">Remove coding</Button>
+        <Button size="small" disabled>
+          Remove coding
+        </Button>
       </CardActions>
     </Card>
   );
