@@ -166,7 +166,8 @@ const Source: React.FC<SourceProps> = (props) => {
         {newCoding ? (
           <Card
             sx={{
-              maxWidth: 400
+              maxWidth: 400,
+              marginBottom: '10px'
             }}
           >
             <CardContent>
