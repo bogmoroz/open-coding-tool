@@ -6,7 +6,7 @@ import {
   Typography
 } from '@mui/material';
 import { Coding } from '../types';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 interface CodingCardProps {
@@ -29,6 +29,8 @@ const viewingModules = {
 
 const CodingCard: React.FC<CodingCardProps> = (props) => {
   const { coding, onCodingEdited } = props;
+
+  console.log(coding);
 
   const [editedSnippet, setEditedSnippet] = useState(coding.codedSnippet);
 
@@ -56,6 +58,10 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
     }
   };
 
+  useEffect(() => {
+    setEditedSnippet(props.coding.codedSnippet);
+  }, [props.coding]);
+
   return (
     <Card key={coding.id} sx={{ maxWidth: 400 }}>
       <CardContent>
@@ -63,7 +69,7 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
           Code name
         </Typography>
         <Typography variant="h5" component="div">
-          {coding.code.codeName}
+          {coding.code?.codeName}
         </Typography>
 
         <ReactQuill

@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { GetStaticProps } from 'next';
-
-import prisma from '../../lib/prisma';
 import Layout from '../../components/Layout';
 import { Code } from '../../types';
 
@@ -11,27 +8,9 @@ import '@nosferatu500/react-sortable-tree/style.css'; // This only needs to be i
 import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import SortableTree from '@nosferatu500/react-sortable-tree';
+import CodingCard from '../../components/CodingCard';
 
 export const dynamic = 'force-dynamic';
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const codes = await prisma.code.findMany({
-//     include: {
-//       codings: true
-//     }
-//   });
-
-//   console.log(codes);
-
-//   return {
-//     props: { codes },
-//     revalidate: 1
-//   };
-// };
-
-// type Props = {
-//   codes: Code[];
-// };
 
 const CodesPage: React.FC = () => {
   const router = useRouter();
@@ -45,6 +24,8 @@ const CodesPage: React.FC = () => {
   const [codeDictionary, setCodeDictionary] = React.useState<
     Record<number, Code>
   >({}); // A dictionary to efficiently look up code objects by ID
+
+  const [selectedCode, setSelectedCode] = React.useState<Code | undefined>();
 
   const fetchCodes = async () => {
     try {
@@ -144,13 +125,42 @@ const CodesPage: React.FC = () => {
     <Layout>
       <div className="page">
         <h1>Codes</h1>
-        <main>
+        <main style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
           <div style={{ height: '100vh' }}>
             <Button onClick={handleSave} disabled={!unsavedChanges}>
               Save
             </Button>
-            <SortableTree treeData={treeData} onChange={handleTreeChange} />
+            <SortableTree
+              treeData={treeData}
+              onChange={handleTreeChange}
+              generateNodeProps={(rowInfo) => {
+                return {
+                  onClick: () => {
+                    console.log(rowInfo);
+                    const selectedCode = codeDictionary[rowInfo.node.id];
+
+                    setSelectedCode({
+                      ...selectedCode
+                    });
+                  }
+                };
+              }}
+            />
           </div>
+          {selectedCode && (
+            <div>
+              {selectedCode.codings?.map((coding) => (
+                <CodingCard
+                  coding={{
+                    ...coding,
+                    codedSnippet: coding.codedSnippet,
+                    code: { ...selectedCode }
+                  }}
+                  onCodingEdited={() => {}}
+                />
+              ))}
+            </div>
+          )}
         </main>
       </div>
       <style jsx>{`
