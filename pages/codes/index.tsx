@@ -83,7 +83,7 @@ const CodesPage: React.FC = () => {
       .map((code) => {
         const children = buildTree(data, code.id);
         return {
-          title: code.codeName,
+          title: code.codeName + ' (' + code.codings?.length + ')',
           children: children.length > 0 ? children : undefined,
           id: code.id,
           expanded: true
