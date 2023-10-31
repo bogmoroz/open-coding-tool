@@ -1,27 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
-import { Code } from '../../types';
+import { Code, Source } from '../../types';
 
 // import SortableTree from '@nosferatu500/react-sortable-tree';
 import '@nosferatu500/react-sortable-tree/style.css'; // This only needs to be imported once in your app
 
 import { useRouter } from 'next/router';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import SortableTree from '@nosferatu500/react-sortable-tree';
 import CodingCard from '../../components/CodingCard';
+import { GetServerSideProps } from 'next';
+import prisma from '../../lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-const CodesPage: React.FC = () => {
-  const router = useRouter();
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const sources = await prisma.source.findMany();
 
+  const sourceDictionary: Record<number, Source> = {};
+
+  sources.forEach((source) => {
+    sourceDictionary[source.id] = { ...source };
+  });
+
+  return {
+    props: { sourceDictionary }
+  };
+};
+
+interface CodesPageProps {
+  sourceDictionary: Record<number, Source>;
+}
+
+const CodesPage: React.FC<CodesPageProps> = (props) => {
   const [codes, setCodes] = React.useState<Code[]>([]);
 
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
 
   const [treeData, setTreeData] = useState(() => buildTree(codes));
 
-  const [codeDictionary, setCodeDictionary] = React.useState<
+  const [codeDictionary, _setCodeDictionary] = React.useState<
     Record<number, Code>
   >({}); // A dictionary to efficiently look up code objects by ID
 
@@ -155,6 +173,7 @@ const CodesPage: React.FC = () => {
           </div>
           {selectedCode && (
             <div>
+              <Typography variant="h5">{selectedCode.codeName}</Typography>
               {selectedCode.codings?.map((coding) => (
                 <CodingCard
                   coding={{
@@ -166,7 +185,8 @@ const CodesPage: React.FC = () => {
                     }
                   }}
                   onCodingEdited={() => {}}
-                  showSourceNumber={true}
+                  source={props.sourceDictionary[coding.sourceId]}
+                  showCodeName={false}
                 />
               ))}
             </div>

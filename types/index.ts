@@ -16,5 +16,5 @@ export interface Coding extends PrismaCoding {
 }
 
 export interface Source extends PrismaSource {
-  codings: Coding[];
+  codings?: Coding[];
 }

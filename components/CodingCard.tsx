@@ -5,12 +5,13 @@ import {
   CardContent,
   Typography
 } from '@mui/material';
-import { Coding } from '../types';
+import { Coding, Source } from '../types';
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 interface CodingCardProps {
-  showSourceNumber?: boolean;
+  source?: Source;
+  showCodeName?: boolean;
   coding: Coding;
   onCodingEdited: () => void;
 }
@@ -69,17 +70,20 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
       sx={{ maxWidth: 400, display: 'flex', flexDirection: 'column' }}
     >
       <CardContent>
-        {props.showSourceNumber && (
+        {props.source && (
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {coding.sourceId}
+            {props.source.sourceNumber} {props.source.publicationTitle}
           </Typography>
         )}
         {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Code name
         </Typography> */}
-        <Typography variant="h5" component="div">
-          {coding.code?.codeName}
-        </Typography>
+
+        {props.showCodeName && (
+          <Typography variant="h5" component="div">
+            {coding.code?.codeName}
+          </Typography>
+        )}
 
         <ReactQuill
           readOnly={!editing}

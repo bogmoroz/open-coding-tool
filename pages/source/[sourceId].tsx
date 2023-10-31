@@ -259,6 +259,7 @@ const Source: React.FC<SourceProps> = (props) => {
         >
           {source.codings.map((coding) => (
             <CodingCard
+              showCodeName={true}
               coding={coding}
               key={coding.codeId}
               onCodingEdited={() => {
