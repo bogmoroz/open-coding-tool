@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Layout from '../../components/Layout';
 import { Code, Source } from '../../types';
 
-// import SortableTree from '@nosferatu500/react-sortable-tree';
 import '@nosferatu500/react-sortable-tree/style.css'; // This only needs to be imported once in your app
 
-import { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
-import SortableTree from '@nosferatu500/react-sortable-tree';
 import CodingCard from '../../components/CodingCard';
 import { GetServerSideProps } from 'next';
 import prisma from '../../lib/prisma';
-
-export const dynamic = 'force-dynamic';
+import dynamic from 'next/dynamic';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const sources = await prisma.source.findMany();
@@ -33,6 +29,14 @@ interface CodesPageProps {
 }
 
 const CodesPage: React.FC<CodesPageProps> = (props) => {
+  const SortableTree = useMemo(
+    () =>
+      dynamic(() => import('@nosferatu500/react-sortable-tree'), {
+        ssr: false
+      }),
+    []
+  );
+
   const [codes, setCodes] = React.useState<Code[]>([]);
 
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
