@@ -18,7 +18,7 @@ export const authOptions = {
     })
   ],
   adapter: PrismaAdapter(prisma),
-  secret: process.env.SECRET,
+  secret: process.env.GITHUB_SECRET,
   callbacks: {
     async signIn(response) {
       console.log('LOGGED IN');
