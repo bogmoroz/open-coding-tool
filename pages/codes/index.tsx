@@ -131,7 +131,7 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
       const responseBody = await response.json();
 
       setUnsavedChanges(false);
-      console.log(responseBody);
+      // console.log(responseBody);
 
       fetchCodes();
     } catch (error) {
@@ -160,7 +160,7 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
               generateNodeProps={(rowInfo) => {
                 return {
                   onClick: () => {
-                    console.log(rowInfo);
+                    // console.log(rowInfo);
                     const selectedCode = codeDictionary[rowInfo.node.id];
 
                     setSelectedCode({

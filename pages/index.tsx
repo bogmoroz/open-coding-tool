@@ -14,7 +14,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   });
 
-  console.log(sources);
+  // console.log(sources);
 
   return {
     props: { sources },

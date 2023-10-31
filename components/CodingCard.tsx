@@ -32,7 +32,7 @@ const viewingModules = {
 const CodingCard: React.FC<CodingCardProps> = (props) => {
   const { coding, onCodingEdited } = props;
 
-  console.log(coding);
+  // console.log(coding);
 
   const [editedSnippet, setEditedSnippet] = useState(coding.codedSnippet);
 

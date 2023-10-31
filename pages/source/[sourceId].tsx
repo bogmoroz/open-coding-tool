@@ -121,7 +121,7 @@ const Source: React.FC<SourceProps> = (props) => {
 
       const responseBody = await response.json();
 
-      console.log(responseBody);
+      // console.log(responseBody);
 
       setSelectedCode(responseBody as Code);
     } catch (error) {
