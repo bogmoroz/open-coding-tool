@@ -28,6 +28,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       codings: {
         include: {
           code: true
+        },
+        orderBy: {
+          id: 'asc'
         }
       }
     }
