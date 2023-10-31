@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
           code: true
         },
         orderBy: {
-          id: 'asc'
+          id: 'desc'
         }
       }
     }
