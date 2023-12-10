@@ -4,7 +4,7 @@ import { Code, Source } from '../../types';
 
 import '@nosferatu500/react-sortable-tree/style.css'; // This only needs to be imported once in your app
 
-import { Button, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import CodingCard from '../../components/CodingCard';
 import { GetServerSideProps } from 'next';
 import prisma from '../../lib/prisma';
@@ -42,6 +42,8 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
 
   const [treeData, setTreeData] = useState(() => buildTree(codes));
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [codeDictionary, _setCodeDictionary] = React.useState<
     Record<number, Code>
@@ -158,7 +160,16 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
             <Button onClick={handleSave} disabled={!unsavedChanges}>
               Save
             </Button>
+            <TextField
+              placeholder="search"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
+            />
             <SortableTree
+              searchQuery={searchQuery}
+              searchFocusOffset={5}
               treeData={treeData}
               onChange={handleTreeChange}
               generateNodeProps={(rowInfo) => {

@@ -7,6 +7,8 @@ import { authOptions } from '../auth/[...nextauth]';
 export default async function handle(req, res) {
   if (req.method === 'GET') {
     handleGet(req, res);
+  } else if (req.method === 'PUT') {
+    handlePut(req, res);
   } else if (req.method === 'POST') {
     handlePost(req, res);
   } else {
@@ -38,6 +40,27 @@ async function handlePost(req, res) {
   const result = await prisma.code.create({
     data: {
       codeName: newCode.codeName
+    }
+  });
+  res.json(result);
+}
+
+// PUT /api/code
+async function handlePut(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    res.status(401).end();
+    return;
+  }
+
+  const updatedCode: Code = req.body;
+
+  const result = await prisma.code.update({
+    where: {
+      id: updatedCode.id
+    },
+    data: {
+      parentId: updatedCode.parentId
     }
   });
   res.json(result);

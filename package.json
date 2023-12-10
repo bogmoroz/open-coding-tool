@@ -6,7 +6,8 @@
     "postinstall": "prisma generate",
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prisma-dev": "prisma studio"
   },
   "keywords": [],
   "author": "",

@@ -22,6 +22,11 @@ const Header: React.FC = () => {
           Codes
         </a>
       </Link>
+      <Link href="/focused-coding" legacyBehavior>
+        <a className="bold" data-active={isActive('/focused-coding')}>
+          Focused coding
+        </a>
+      </Link>
 
       <style jsx>{`
         .bold {
@@ -58,6 +63,11 @@ const Header: React.FC = () => {
         <Link href="/codes" legacyBehavior>
           <a className="bold" data-active={isActive('/codes')}>
             Codes
+          </a>
+        </Link>
+        <Link href="/focused-coding" legacyBehavior>
+          <a className="bold" data-active={isActive('/focused-coding')}>
+            Focused coding
           </a>
         </Link>
         <style jsx>{`
@@ -135,6 +145,11 @@ const Header: React.FC = () => {
         <Link href="/codes" legacyBehavior>
           <a className="bold" data-active={isActive('/codes')}>
             Codes
+          </a>
+        </Link>
+        <Link href="/focused-coding" legacyBehavior>
+          <a className="bold" data-active={isActive('/focused-coding')}>
+            Focused coding
           </a>
         </Link>
         <style jsx>{`
