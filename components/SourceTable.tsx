@@ -34,7 +34,10 @@ export default function SourceTable(props: SourceTableProps) {
           {props.sources.map((source) => (
             <TableRow
               key={source.sourceNumber}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{
+                '&:last-child td, &:last-child th': { border: 0 },
+                background: source.initialCodingDone === true && '#D1FFBD'
+              }}
             >
               <TableCell align="right">
                 <Link href={`source/${source.sourceNumber}/`} legacyBehavior>
