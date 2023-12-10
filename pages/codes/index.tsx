@@ -4,7 +4,7 @@ import { Code, Source } from '../../types';
 
 import '@nosferatu500/react-sortable-tree/style.css'; // This only needs to be imported once in your app
 
-import { Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import CodingCard from '../../components/CodingCard';
 import { GetServerSideProps } from 'next';
 import prisma from '../../lib/prisma';
@@ -189,21 +189,30 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
           {selectedCode && (
             <div>
               <Typography variant="h5">{selectedCode.codeName}</Typography>
-              {selectedCode.codings?.map((coding) => (
-                <CodingCard
-                  coding={{
-                    ...coding,
-                    codedSnippet: coding.codedSnippet,
-                    code: { ...selectedCode },
-                    source: {
-                      ...coding.source
-                    }
-                  }}
-                  onCodingEdited={() => {}}
-                  source={props.sourceDictionary[coding.sourceId]}
-                  showCodeName={false}
-                />
-              ))}
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridColumnGap: '5px',
+                  gridRowGap: '5px',
+                  gridTemplateColumns: 'repeat( auto-fit, minmax(250px, 1fr) )'
+                }}
+              >
+                {selectedCode.codings?.map((coding) => (
+                  <CodingCard
+                    coding={{
+                      ...coding,
+                      codedSnippet: coding.codedSnippet,
+                      code: { ...selectedCode },
+                      source: {
+                        ...coding.source
+                      }
+                    }}
+                    onCodingEdited={() => {}}
+                    source={props.sourceDictionary[coding.sourceId]}
+                    showCodeName={false}
+                  />
+                ))}
+              </Box>
             </div>
           )}
         </main>
