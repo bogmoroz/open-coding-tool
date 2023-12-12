@@ -10,31 +10,6 @@ import {
 } from '@mui/material';
 import { Code } from '../types';
 import 'react-quill/dist/quill.snow.css';
-import prisma from '../lib/prisma';
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const source = await prisma.source.findUnique({
-    where: {
-      sourceNumber: Number(params?.sourceId)
-    },
-    include: {
-      codings: {
-        include: {
-          code: true
-        },
-        orderBy: {
-          id: 'desc'
-        }
-      }
-    }
-  });
-
-  const codes = await prisma.code.findMany();
-
-  return {
-    props: { source, initialAvailableCodes: codes }
-  };
-};
 
 interface CodeEditorProps {
   initialAvailableCodes: Code[];
