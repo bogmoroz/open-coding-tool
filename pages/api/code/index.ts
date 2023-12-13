@@ -63,5 +63,6 @@ async function handlePut(req, res) {
       parentId: updatedCode.parentId
     }
   });
+
   res.json(result);
 }
