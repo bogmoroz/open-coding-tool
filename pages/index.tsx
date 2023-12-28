@@ -2,7 +2,12 @@ import React from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
 import prisma from '../lib/prisma';
-import { Table } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography
+} from '@mui/material';
 import BasicTable from '../components/BasicTable';
 import SourceTable from '../components/SourceTable';
 import { Source } from '@prisma/client';
@@ -27,11 +32,35 @@ type Props = {
 };
 
 const Blog: React.FC<Props> = (props) => {
+  const sourceTypeCount = new Map<string, number>();
+
+  props.sources.forEach((source) => {
+    if (!source.initialCodingDone) {
+      return;
+    }
+    const { sourceType } = source;
+    sourceTypeCount.set(sourceType, (sourceTypeCount.get(sourceType) || 0) + 1);
+  });
+
   return (
     <Layout>
       <div className="page">
         <h1>Sources</h1>
         <main>
+          <Accordion>
+            <AccordionSummary>
+              <Typography>{`Total sources reviewed: ${
+                props.sources.filter(
+                  (source) => source.initialCodingDone === true
+                ).length
+              }`}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {Array.from(sourceTypeCount).map(([key, value]) => (
+                <Typography>{`${key}: ${value}`}</Typography>
+              ))}
+            </AccordionDetails>
+          </Accordion>
           <SourceTable sources={props.sources} />
         </main>
       </div>
