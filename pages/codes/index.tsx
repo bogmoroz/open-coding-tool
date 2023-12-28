@@ -161,6 +161,8 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
               Save
             </Button>
             <TextField
+              aria-label="code-search"
+              autoComplete="off"
               placeholder="search"
               value={searchQuery}
               onChange={(e) => {
