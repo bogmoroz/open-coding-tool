@@ -8,7 +8,7 @@ export const config = {
   api: {
     responseLimit: false,
     bodyParser: {
-      sizeLimit: '16mb' // Set desired value here
+      sizeLimit: '16mb'
     }
   }
 };
