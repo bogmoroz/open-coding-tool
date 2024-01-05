@@ -6,7 +6,7 @@ import { authOptions } from '../auth/[...nextauth]';
 
 export const config = {
   api: {
-    responseLimit: false
+    responseLimit: '16mb'
   }
 };
 
