@@ -4,6 +4,14 @@ import { Code } from '../../../types';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '8mb' // Set desired value here
+    }
+  }
+};
+
 export default async function handle(req, res) {
   if (req.method === 'GET') {
     handleGet(req, res);

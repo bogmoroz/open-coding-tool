@@ -7,7 +7,7 @@ import { authOptions } from '../auth/[...nextauth]';
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '4mb' // Set desired value here
+      sizeLimit: '8mb' // Set desired value here
     }
   }
 };
