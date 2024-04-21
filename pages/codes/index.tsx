@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Layout from '../../components/Layout';
-import { Code, Source } from '../../types';
+import { Code, ISource } from '../../types';
 
 import '@nosferatu500/react-sortable-tree/style.css'; // This only needs to be imported once in your app
 
@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic';
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const sources = await prisma.source.findMany();
 
-  const sourceDictionary: Record<number, Source> = {};
+  const sourceDictionary: Record<number, ISource> = {};
 
   sources.forEach((source) => {
     sourceDictionary[source.id] = { ...source };
@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 };
 
 interface CodesPageProps {
-  sourceDictionary: Record<number, Source>;
+  sourceDictionary: Record<number, ISource>;
 }
 
 const CodesPage: React.FC<CodesPageProps> = (props) => {

@@ -6,13 +6,13 @@ import {
   Typography,
   Link as MuiLink
 } from '@mui/material';
-import { Coding, Source } from '../types';
+import { Coding, ISource } from '../types';
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 interface CodingCardProps {
-  source?: Source;
+  source?: ISource;
   showCodeName?: boolean;
   coding: Coding;
   onCodingEdited: () => void;

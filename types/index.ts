@@ -12,9 +12,9 @@ export interface Code extends PrismaCode {
 
 export interface Coding extends PrismaCoding {
   code: Code;
-  source: Source;
+  source: ISource;
 }
 
-export interface Source extends PrismaSource {
+export interface ISource extends PrismaSource {
   codings?: Coding[];
 }

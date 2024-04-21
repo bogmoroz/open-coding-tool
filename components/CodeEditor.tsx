@@ -93,7 +93,7 @@ const CodeEditor: React.FC<CodeEditorProps> = (props) => {
   return (
     <div>
       <Autocomplete
-        sx={{ marginBottom: '10px', minWidth: '500px' }}
+        sx={{ marginBottom: '10px', minWidth: '200px' }}
         freeSolo
         options={availableCodes.map((code) => code.codeName) || []}
         value={selectedCode?.codeName}

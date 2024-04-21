@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import Layout from '../../components/Layout';
 import prisma from '../../lib/prisma';
 import { Button, Link as MuiLink, Typography } from '@mui/material';
-import { Source, Code } from '../../types';
+import { ISource, Code } from '../../types';
 import 'react-quill/dist/quill.snow.css';
 import CodeEditor from '../../components/CodeEditor';
 
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 };
 
 interface SourceProps {
-  source: Source;
+  source: ISource;
   initialAvailableCodes: Code[];
 }
 
@@ -84,7 +84,13 @@ const ParentChildEditor: React.FC<SourceProps> = (props) => {
     <Layout>
       <div>
         <Typography variant="h4">{`Parent-child editor`}</Typography>
-        <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            flexWrap: 'wrap'
+          }}
+        >
           <CodeEditor
             initialAvailableCodes={availableCodes}
             label="Parent code"

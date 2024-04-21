@@ -13,7 +13,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { Source, Coding, Code } from '../../types';
+import { ISource, Coding, Code } from '../../types';
 import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 };
 
 interface SourceProps {
-  source: Source;
+  source: ISource;
   initialAvailableCodes: Code[];
 }
 
@@ -261,7 +261,7 @@ const Source: React.FC<SourceProps> = (props) => {
             <CodingCard
               showCodeName={true}
               coding={coding}
-              key={coding.codeId}
+              key={coding.id}
               onCodingEdited={() => {
                 router.reload();
               }}
