@@ -69,7 +69,12 @@ const CodingCard: React.FC<CodingCardProps> = (props) => {
   return (
     <Card
       key={coding.id}
-      sx={{ maxWidth: 400, display: 'flex', flexDirection: 'column' }}
+      sx={{
+        maxWidth: 400,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'visible'
+      }}
     >
       <CardContent>
         {props.source && (
