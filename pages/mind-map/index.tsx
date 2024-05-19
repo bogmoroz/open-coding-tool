@@ -9,6 +9,7 @@ import CodingCard from '../../components/CodingCard';
 import { GetServerSideProps } from 'next';
 import prisma from '../../lib/prisma';
 import dynamic from 'next/dynamic';
+import Tree from 'react-d3-tree';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const sources = await prisma.source.findMany();
@@ -24,22 +25,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 };
 
-interface CodesPageProps {
+interface MindMapPageProps {
   sourceDictionary: Record<number, ISource>;
 }
 
-const CodesPage: React.FC<CodesPageProps> = (props) => {
-  const SortableTree = useMemo(
-    () =>
-      dynamic(() => import('@nosferatu500/react-sortable-tree'), {
-        ssr: false
-      }),
-    []
-  );
-
+const MindMapPage: React.FC<MindMapPageProps> = (props) => {
   const [codes, setCodes] = React.useState<Code[]>([]);
 
   const [unsavedChanges, setUnsavedChanges] = React.useState(false);
+
+  const [showTree, setShowTree] = React.useState(false);
 
   const [treeData, setTreeData] = useState(() => buildTree(codes));
 
@@ -67,8 +62,6 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
   };
 
   useEffect(() => {
-    console.log('Fetch codes');
-
     fetchCodes();
   }, []);
 
@@ -79,6 +72,7 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
     });
 
     setTreeData(buildTree(codes));
+    setShowTree(true);
   }, [codes]);
 
   // Convert flat list of codes to hierarchical tree structure
@@ -88,10 +82,9 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
       .map((code) => {
         const children = buildTree(data, code.id);
         return {
-          title: code.codeName + ' (' + code.codings?.length + ')',
-          children: children.length > 0 ? children : undefined,
           id: code.id,
-          expanded: true
+          name: code.codeName + ' (' + code.codings?.length + ')',
+          children: children.length > 0 ? children : undefined
         };
       });
     return tree;
@@ -145,60 +138,57 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
     }
   };
 
-  console.log(treeData);
-
   return (
     <Layout>
       <div className="page">
         {/* <h1>Codes</h1> */}
         <main
+          id="treeWrapper"
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            height: '100vh'
+            gridTemplateRows: '1fr 2fr',
+            height: '100vh',
+            overflow: 'auto'
           }}
         >
-          <div style={{ height: '100%' }}>
-            <Button onClick={handleSave} disabled={!unsavedChanges}>
-              Save
-            </Button>
-            <TextField
-              aria-label="code-search"
-              autoComplete="off"
-              placeholder="search"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-              }}
-            />
-            <SortableTree
-              searchQuery={searchQuery}
-              searchFocusOffset={5}
-              treeData={treeData}
-              onChange={handleTreeChange}
-              generateNodeProps={(rowInfo) => {
-                return {
-                  onClick: () => {
-                    // console.log(rowInfo);
-                    const selectedCode = codeDictionary[rowInfo.node.id];
-
-                    setSelectedCode({
-                      ...selectedCode
-                    });
-                  }
-                };
-              }}
-            />
+          <div style={{ height: '100%', width: '100%', overflow: 'auto' }}>
+            {showTree && treeData && (
+              <Tree
+                data={{ name: 'Product Ops Root', children: treeData }}
+                zoomable={true}
+                collapsible={false}
+                draggable={true}
+                pathFunc={'step'}
+                orientation="vertical"
+                separation={{
+                  siblings: 4,
+                  nonSiblings: 5
+                }}
+                onNodeClick={(node) => {
+                  const selectedCode = codeDictionary[(node.data as any)?.id];
+                  setSelectedCode({
+                    ...selectedCode
+                  });
+                }}
+              />
+            )}
           </div>
           {selectedCode && (
-            <div>
+            <div
+              style={{
+                height: '100%',
+                overflow: 'auto'
+              }}
+            >
               <Typography variant="h5">{selectedCode.codeName}</Typography>
               <Box
                 sx={{
                   display: 'grid',
                   gridColumnGap: '5px',
                   gridRowGap: '5px',
-                  gridTemplateColumns: 'repeat( auto-fit, minmax(250px, 1fr) )'
+                  gridTemplateColumns: 'repeat( auto-fit, minmax(250px, 1fr) )',
+                  height: '100%',
+                  overflow: 'scroll'
                 }}
               >
                 {selectedCode.codings?.map((coding) => (
@@ -239,4 +229,4 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
   );
 };
 
-export default CodesPage;
+export default MindMapPage;

@@ -23,6 +23,7 @@
     "next": "^14.0.0",
     "next-auth": "^4.24.4",
     "react": "^18.0.0",
+    "react-d3-tree": "^3.6.2",
     "react-dom": "^18.0.0",
     "react-markdown": "8.0.0",
     "react-quill": "^2.0.0"
