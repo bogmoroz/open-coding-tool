@@ -19,12 +19,12 @@ const Header: React.FC = () => {
       </Link>
       <Link href="/codes" legacyBehavior>
         <a className="bold" data-active={isActive('/codes')}>
-          Codes
+          Code tree
         </a>
       </Link>
-      <Link href="/focused-coding" legacyBehavior>
-        <a className="bold" data-active={isActive('/focused-coding')}>
-          Focused coding
+      <Link href="/mind-map" legacyBehavior>
+        <a className="bold" data-active={isActive('/mind-map')}>
+          Mind map
         </a>
       </Link>
 
