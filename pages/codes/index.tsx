@@ -145,8 +145,6 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
     }
   };
 
-  console.log(treeData);
-
   return (
     <Layout>
       <div className="page">
@@ -193,6 +191,18 @@ const CodesPage: React.FC<CodesPageProps> = (props) => {
           {selectedCode && (
             <div>
               <Typography variant="h5">{selectedCode.codeName}</Typography>
+              {Array.from(
+                new Set(
+                  selectedCode.codings
+                    ?.map(
+                      (coding) =>
+                        props.sourceDictionary[coding.sourceId].sourceNumber
+                    )
+                    .sort((a, b) => a - b)
+                )
+              )
+                .reduce((prev, cur) => prev.concat(cur + ', '), '')
+                .slice(0, -2)}
               <Box
                 sx={{
                   display: 'grid',
