@@ -90,6 +90,7 @@ const FrameworkPage: React.FC<Props> = ({ pillars }) => {
   const [showBadges, setShowBadges] = useState(false);
   const [modal, setModal] = useState<ModalState | null>(null);
   const [search, setSearch] = useState('');
+  const [flashCardId, setFlashCardId] = useState<number | null>(null);
 
   const allIds = pillars.map((p) => p.id);
 
@@ -151,6 +152,8 @@ const FrameworkPage: React.FC<Props> = ({ pillars }) => {
         block: 'center'
       });
     }, 50);
+    setTimeout(() => setFlashCardId(cardId), 400);
+    setTimeout(() => setFlashCardId(null), 1800);
   };
 
   return (
@@ -187,7 +190,7 @@ const FrameworkPage: React.FC<Props> = ({ pillars }) => {
           {pillars.map((pillar) => {
             const isFlipped = flipped.has(pillar.id) || cardsWithMatchedChildren.has(pillar.id);
             return (
-              <div key={pillar.id} id={`card-${pillar.id}`} className={`card-wrap ${matchedIds.has(pillar.id) ? 'highlighted' : ''}`}>
+              <div key={pillar.id} id={`card-${pillar.id}`} className={`card-wrap ${matchedIds.has(pillar.id) ? 'highlighted' : ''} ${flashCardId === pillar.id ? 'flash' : ''}`}>
                 {/* Back rendered first — its height drives the card-wrap height */}
                 <div className={`card-back ${isFlipped ? 'visible' : ''}`}>
                   <div
@@ -534,6 +537,15 @@ const FrameworkPage: React.FC<Props> = ({ pillars }) => {
           }
           .search-clear:hover {
             color: #0d1b2a;
+          }
+          @keyframes flash-pulse {
+            0%   { box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.6); border-color: #2196f3; }
+            60%  { box-shadow: 0 0 0 8px rgba(33, 150, 243, 0.2); border-color: #2196f3; }
+            100% { box-shadow: 0 0 0 4px rgba(33, 150, 243, 0);   border-color: #d0dce8; }
+          }
+          .card-wrap.flash .card-back,
+          .card-wrap.flash .card-front {
+            animation: flash-pulse 1.4s ease-out forwards;
           }
           .card-wrap.highlighted .card-front,
           .card-wrap.highlighted .card-back {
