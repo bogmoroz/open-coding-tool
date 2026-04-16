@@ -27,6 +27,11 @@ const Header: React.FC = () => {
           Mind map
         </a>
       </Link>
+      <Link href="/framework" legacyBehavior>
+        <a className="bold" data-active={isActive('/framework')}>
+          Framework!
+        </a>
+      </Link>
 
       <style jsx>{`
         .bold {
@@ -68,6 +73,11 @@ const Header: React.FC = () => {
         <Link href="/mind-map" legacyBehavior>
           <a className="bold" data-active={isActive('/mind-map')}>
             Mind map
+          </a>
+        </Link>
+        <Link href="/framework" legacyBehavior>
+          <a className="bold" data-active={isActive('/framework')}>
+            Framework
           </a>
         </Link>
         <style jsx>{`
@@ -150,6 +160,11 @@ const Header: React.FC = () => {
         <Link href="/mind-map" legacyBehavior>
           <a className="bold" data-active={isActive('/mind-map')}>
             Mind map
+          </a>
+        </Link>
+        <Link href="/framework" legacyBehavior>
+          <a className="bold" data-active={isActive('/framework')}>
+            Framework
           </a>
         </Link>
         <Link href="/focused-coding" legacyBehavior>
